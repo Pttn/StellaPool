@@ -248,7 +248,7 @@ class Stella {
 			$status = $this->checkRiecoinAddress($address);
 			if ($status !== true)
 				throw new Exception($status);
-			if (strlen($code) > 128)
+			if (strlen($code) > 256)
 				throw new Exception('Invalid code');
 			$verifycodeResponse = $this->riecoinRPC->verifycode($address, $code);
 			$valid = $verifycodeResponse ?? false;
