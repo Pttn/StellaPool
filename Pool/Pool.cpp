@@ -304,7 +304,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 	}
 	if (_isBanned(miner->ip)) {
 		LOGMSG("Received message from banned miner " << miner->str());
-		_punish(miner->ip, -60.);
+		_punish(miner->ip, -10.);
 		return {"{\"id\": null, \"result\": null, \"error\": [20, \"Banned miner\"]}\n"s, true};
 	}
 	std::string method;
@@ -315,7 +315,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 	}
 	catch (std::exception &e) {
 		LOGMSG("Received invalid JSON message from " << miner->str());
-		_punish(miner->ip, -60.);
+		_punish(miner->ip, -10.);
 		return {"{\"id\": null, \"result\": null, \"error\": [20, \"Invalid JSON message\"]}\n"s, true};
 	}
 	try {
@@ -330,7 +330,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 	}
 	catch (std::exception &e) {
 		LOGMSG("Received message with missing or invalid method from " << miner->str());
-		_punish(miner->ip, -60.);
+		_punish(miner->ip, -10.);
 		return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Missing or invalid method\"]}\n"s, true};
 	}
 	if (method == "mining.subscribe") {
@@ -341,7 +341,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 	else if (method == "mining.authorize") {
 		if (miner->state != Miner::State::SUBSCRIBED) {
 			LOGMSG("Not authorizing unsubscribed " << miner->str());
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -10.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [25, \"Not subscribed\"]}\n"s, true};
 		}
 		else {
@@ -351,12 +351,12 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 			}
 			catch (std::exception &e) {
 				LOGMSG("Not authorizing (missing or invalid username) " << miner->str());
-				_punish(miner->ip, -30.);
+				_punish(miner->ip, -2.);
 				return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Missing or invalid username\"]}\n"s, true};
 			}
 			if (username.size() == 0) {
 				LOGMSG("Not authorizing (empty username) " << miner->str());
-				_punish(miner->ip, -30.);
+				_punish(miner->ip, -2.);
 				return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Empty username\"]}\n"s, true};
 			}
 			if (username.size() <= 20 && std::all_of(username.begin(), username.end(), [](unsigned char c){return std::isalnum(c);})) {
@@ -370,17 +370,17 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 						}
 						catch (std::exception &e) {
 							LOGMSG("Not authorizing (missing or invalid password) " << miner->str());
-							_punish(miner->ip, -30.);
+							_punish(miner->ip, -2.);
 							return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Missing or invalid password\"]}\n"s, true};
 						}
 						if (password.size() > 128 || password.size() % 2 != 0) {
 							LOGMSG("Not authorizing (invalid token size) " << miner->str());
-							_punish(miner->ip, -30.);
+							_punish(miner->ip, -2.);
 							return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Invalid token size\"]}\n"s, true};
 						}
 						if (!isHexStr(password)) {
 							LOGMSG("Not authorizing (token is not a hex string) " << miner->str());
-							_punish(miner->ip, -30.);
+							_punish(miner->ip, -2.);
 							return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Token is not a hex string\"]}\n"s, true};
 						}
 						const std::vector<uint8_t> tokenV8(hexStrToV8(password));
@@ -389,7 +389,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 							const uint64_t tokenUserId(sqlResult2->getUInt64("userId"));
 							if (userId != tokenUserId) {
 								LOGMSG("Not authorizing (username and token do not match) " << miner->str());
-								_punish(miner->ip, -30.);
+								_punish(miner->ip, -2.);
 								return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Username and token do not match\"]}\n"s, true};
 							}
 							else {
@@ -402,13 +402,13 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 						}
 						else {
 							LOGMSG("Not authorizing (token not found) " << miner->str());
-							_punish(miner->ip, -30.);
+							_punish(miner->ip, -2.);
 							return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Token not found\"]}\n"s, true};
 						}
 					}
 					else {
 						LOGMSG("Not authorizing (user not found) " << miner->str());
-						_punish(miner->ip, -30.);
+						_punish(miner->ip, -2.);
 						return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"User not found\"]}\n"s, true};
 					}
 				}
@@ -433,12 +433,12 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 			}
 			catch (...) {
 				LOGMSG("Not authorizing (neither a registered username nor a valid Riecoin address) " << miner->str());
-				_punish(miner->ip, -30.);
+				_punish(miner->ip, -2.);
 				return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Neither a registered username nor a valid Riecoin address\"]}\n"s, true};
 			}
 			if (username != addressFromGetaddressinfo || !isWitnessAddress) {
 				LOGMSG("Not authorizing (not a valid Bech32 Address) " << miner->str());
-				_punish(miner->ip, -30.);
+				_punish(miner->ip, -2.);
 				return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Not a valid Bech32 address\"]}\n"s, true};
 			}
 			miner->username = username;
@@ -450,7 +450,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 	else if (method == "mining.submit") {
 		if (miner->state != Miner::State::AUTHORIZED) {
 			LOGMSG("Ignoring share from unauthorized " << miner->str());
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [24, \"Unauthorized worker\"]}\n"s, true};
 		}
 		const std::string userId(miner->userId.has_value() ? std::to_string(miner->userId.value()) : miner->username);
@@ -465,31 +465,31 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 		catch (std::exception &e) {
 			LOGMSG("Received invalid submission (invalid parameters) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Invalid params\"]}\n"s, true};
 		}
 		if (username != miner->username) {
 			LOGMSG("Received invalid submission (wrong username) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Wrong username\"]}\n"s, true};
 		}
 		if (!isHexStrOfSize(extranonce2, 2U*extraNonce2Length)) {
 			LOGMSG("Received invalid submission (invalid Extra Nonce 2) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Invalid Extra Nonce 2 (must be "s + std::to_string(2U*extraNonce2Length) + " hex digits)\"]}\n"s, true};
 		}
 		if (!isHexStr(nTime)) {
 			LOGMSG("Received invalid submission (invalid nTime) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Invalid nTime (must be a hex str)\"]}\n"s, true};
 		}
 		if (!isHexStrOfSize(nOffset, 64)) {
 			LOGMSG("Received invalid submission (invalid nOffset) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Invalid nOffset (must be 64 hex digits)\"]}\n"s, true};
 		}
 		if (_roundOffsets.find(nOffset) != _roundOffsets.end()) {
@@ -520,7 +520,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 		if (!jobFound) {
 			LOGMSG("Received invalid submission (job not found) from " << miner->str());
 			_updatePoints(userId, -2.);
-			_punish(miner->ip, -30.);
+			_punish(miner->ip, -2.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [21, \"Job not found\"]}\n"s, false};
 		}
 		uint64_t shareTimestamp;
@@ -536,20 +536,20 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 		if (shareTimestamp < shareJob.bh.curtime) {
 			LOGMSG("Received invalid submission (timestamp too early) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Timestamp too early (please check your system clock)\"]}\n"s, true};
 		}
 		else if (shareTimestamp > nowU64() + 5) {
 			LOGMSG("Received invalid submission (timestamp too late) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Timestamp too late (please check your system clock)\"]}\n"s, true};
 		}
 		const std::vector<uint8_t> nOffsetV8(reverse(hexStrToV8(nOffset)));
 		if (*reinterpret_cast<const uint16_t*>(&nOffsetV8.data()[0]) != 2) {
 			LOGMSG("Received invalid submission (invalid PoW Version) from " << miner->str());
 			_updatePoints(userId, -4.);
-			_punish(miner->ip, -60.);
+			_punish(miner->ip, -5.);
 			return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Invalid PoW Version\"]}\n"s, true};
 		}
 		shareJob.merkleRootGen(miner->extraNonce1, extranonce2);
@@ -611,7 +611,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 	}
 	else {
 		LOGMSG("Received invalid request (unsupported method) from " << miner->str());
-		_punish(miner->ip, -60.);
+		_punish(miner->ip, -10.);
 		return {"{\"id\": "s + messageId + ", \"result\": null, \"error\": [20, \"Unsupported method "s + method + "\"]}\n"s, true};
 	}
 	// This code should never be reached as something must have been returned by now... 
@@ -1174,7 +1174,7 @@ void Pool::run() {
 					newMiner->ip = hbuf;
 					if (_isBanned(newMiner->ip)) {
 						LOGMSG("Rejected connection from banned IP " << newMiner->ip << " on fd " << newMiner->fileDescriptor);
-						_punish(newMiner->ip, -120.);
+						_punish(newMiner->ip, -30.);
 						close(newMiner->fileDescriptor);
 						continue;
 					}
@@ -1190,7 +1190,7 @@ void Pool::run() {
 					}
 					if (ipOccurrences >= maxMinersFromSameIp) {
 						LOGMSG("Too many connections from " << newMiner->ip << "! Limit: " << maxMinersFromSameIp);
-						_punish(newMiner->ip, -120.);
+						_punish(newMiner->ip, -30.);
 						const std::string messageToSend("{\"id\": null, \"method\": \"client.show_message\", \"params\": [\"Too many connections, consider doing solo mining or spreading your mining power accross other pools\"]}\n"s);
 						write(newMiner->fileDescriptor, messageToSend.c_str(), messageToSend.size());
 						LOGMSG("Rejected connection from " << newMiner->str() << ". Miners: " << _miners.size());
@@ -1239,7 +1239,7 @@ void Pool::run() {
 					receivedMessage += buffer;
 					if (receivedMessage.size() > maxMessageLength) { // Ignore unreasonably long message (possible attack)
 						LOGMSG("Ignoring long message of " << receivedMessage.size() << " bytes and kicking " << miner->str());
-						_punish(miner->ip, -240.);
+						_punish(miner->ip, -30.);
 						close(events[i].data.fd);
 						_miners.erase(events[i].data.fd);
 						break;
