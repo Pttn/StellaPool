@@ -99,7 +99,7 @@ std::vector<uint8_t> bech32ToScriptPubKey(const std::string &address) {
 	}
 	std::vector<uint8_t> expHrpData(expandHrp(addrHrp));
 	expHrpData.insert(expHrpData.end(), v5.begin(), v5.end());
-	if (bech32Polymod(expHrpData) != 1)
+	if (bech32Polymod(expHrpData) != (address[delimiterPos + 1] == 'q' ? 1 : 0x2bc830a3))
 		return {};
 	std::vector<uint8_t> spk(v5ToV8(std::vector<uint8_t>(v5.begin() + 1, v5.end() - 6)));
 	if ((spk.size() == 0 && addrData.size() != 6) || v5[0] > 16)
