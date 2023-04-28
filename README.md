@@ -1,4 +1,4 @@
-# StellaPool 0.9
+# StellaPool
 
 StellaPool provides a Riecoin mining pool, including basic account support and a "PoW Credits" system, explained below. It uses the Stratum protocol.
 
@@ -43,6 +43,8 @@ First, configure Riecoin Core using the `riecoin.conf` file. Here is a basic tem
 ```
 daemon=1
 server=1
+txindex=1
+
 rpcuser=(choose an username)
 rpcpassword=(choose a password)
 
@@ -92,6 +94,7 @@ Then, download the source files, go/`cd` to the directory, and run `make`:
 ```bash
 git clone https://github.com/Pttn/StellaPool.git
 cd StellaPool
+cd Pool
 make
 ```
 
