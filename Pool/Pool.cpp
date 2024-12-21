@@ -563,7 +563,10 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 		_roundOffsets.insert(nOffset);
 		_updatePoints(userId, 1.);
 		miner->latestShareTp = std::chrono::steady_clock::now();
-		LOGMSG("Accepted " << sharePrimeCount << "-share from " << miner->str() << " (" << miner->username << ")");
+		if (sharePrimeCount > 5ULL) {
+			LOGMSG("Accepted " << sharePrimeCount << "-share from " << miner->str() << " (" << miner->username << ")");
+			_punish(miner->ip, 60.);
+		}
 		if (sharePrimeCount >= shareJob.acceptedPatterns[0].size()) {
 			_updatePoints(userId, 64.);
 			LOGMSG("Submitting block with " << shareJob.txHashes.size() << " transaction(s) (including coinbase)...");
