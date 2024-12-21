@@ -1,4 +1,4 @@
-// (c) 2022 Pttn (https://riecoin.dev/en/StellaPool)
+// (c) 2022-present Pttn (https://riecoin.xyz/StellaPool)
 
 #ifndef HEADER_Pool_hpp
 #define HEADER_Pool_hpp
@@ -82,9 +82,9 @@ struct Share { // Just used for recent statistics, not actual share data
 
 constexpr int maxEvents(16);
 constexpr int maxMessageLength(16384);
-constexpr uint32_t maxMinersFromSameIp(16U);
+constexpr uint32_t maxMinersFromSameIp(256U);
 constexpr double jobRefreshInterval(30.);
-constexpr double banThreshold(-1800.);
+constexpr double banThreshold(-7200.);
 constexpr double maxInactivityTime(600.);
 constexpr uint64_t movementsDuration(2592000ULL);
 constexpr uint64_t powcDuration(604800ULL);
