@@ -1,4 +1,4 @@
-// (c) 2022-present Pttn (https://riecoin.dev/en/StellaPool)
+// (c) 2022-present Pttn (https://riecoin.xyz/StellaPool/)
 
 #ifndef HEADER_main_hpp
 #define HEADER_main_hpp
@@ -24,7 +24,7 @@ struct Options {
 	double withdrawalMinimum{0.5}, withdrawalFee{0.01}, withdrawalAutomaticThreshold{5.}, withdrawalProcessingInterval{60.};
 	std::string walletHost{"127.0.0.1"s};
 	uint16_t walletPort{28332U};
-	std::string walletName{""s}, walletUsername{""s}, walletPassword{""s}, databaseHost{"127.0.0.1"s};
+	std::string walletName{""s}, walletUsername{""s}, walletPassword{""s}, walletCookie{""s}, databaseHost{"127.0.0.1"s};
 	uint16_t databasePort{3306U};
 	std::string databaseName{"Stella"s}, databaseUsername{""s}, databasePassword{""s};
 	double databaseUpdateInterval{10.};

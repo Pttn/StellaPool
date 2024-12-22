@@ -1,4 +1,4 @@
-// (c) 2022 Pttn (https://riecoin.dev/en/StellaPool)
+// (c) 2022-present Pttn (https://riecoin.xyz/StellaPool/)
 
 #include "Pool.hpp"
 
@@ -156,12 +156,22 @@ nlohmann::json Pool::_sendRequestToWallet(CURL *curl, const std::string &method,
 		std::string s;
 		const nlohmann::json request{{"method", method}, {"params", params}, {"id", id++}};
 		const std::string requestStr(request.dump());
+		std::string credentials(configuration.options().walletUsername + ":" + configuration.options().walletPassword);
+		if (configuration.options().walletCookie != "") {
+			std::ifstream file(configuration.options().walletCookie, std::ios::in);
+			if (!file) {
+				std::cerr << "Could not open Cookie '"s << configuration.options().walletCookie << "'!"s << std::endl;
+				std::cerr << "Check that the Server is running, that the Cookie does exist at this path, and that this instance of StellaPool can read it."s << std::endl;
+				return {};
+			}
+			std::getline(file, credentials);
+		}
 		curl_easy_setopt(curl, CURLOPT_URL, ("http://"s + configuration.options().walletHost + ":"s + std::to_string(configuration.options().walletPort) + "/wallet/"s + configuration.options().walletName).c_str());
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, requestStr.size());
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, requestStr.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
-		curl_easy_setopt(curl, CURLOPT_USERPWD, (configuration.options().walletUsername + ":" + configuration.options().walletPassword).c_str());
+		curl_easy_setopt(curl, CURLOPT_USERPWD, credentials.c_str());
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30); // Have some margin for transactions using a lot of Inputs, which take a lot of time to be created
 		const CURLcode cc(curl_easy_perform(curl));
 		if (cc != CURLE_OK)

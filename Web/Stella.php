@@ -86,6 +86,16 @@ class Stella {
 				PDO::MYSQL_ATTR_FOUND_ROWS   => true,
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 			]);
+			if (isset($this->options['WalletCookie'])) {
+				$cookie = file_get_contents($this->options['WalletCookie']);
+				if ($cookie == false)
+					throw new Exception('Could not read Cookie');
+				$userPass = explode(':', $cookie, 2);
+				if (count($userPass) != 2)
+					throw new Exception('Invalid Cookie');
+				$this->options['WalletUsername'] = $userPass[0];
+				$this->options['WalletPassword'] = $userPass[1];
+			}
 			$this->riecoinRPC = new RiecoinRPC(array(
 				'rpcuser' => $this->options['WalletUsername'],
 				'rpcpassword' => $this->options['WalletPassword'],

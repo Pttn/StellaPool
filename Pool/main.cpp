@@ -1,4 +1,4 @@
-// (c) 2022 Pttn (https://riecoin.dev/en/StellaPool)
+// (c) 2022-present Pttn (https://riecoin.xyz/StellaPool/)
 
 #include <nlohmann/json.hpp>
 #include <signal.h>
@@ -95,6 +95,7 @@ bool Configuration::parse(const int argc, char** argv) {
 		else if (key == "WalletName") _options.walletName = value;
 		else if (key == "WalletUsername") _options.walletUsername = value;
 		else if (key == "WalletPassword") _options.walletPassword = value;
+		else if (key == "WalletCookie") _options.walletCookie = value;
 		else if (key == "DatabaseHost") _options.databaseHost = value;
 		else if (key == "DatabasePort") {
 			try {_options.databasePort = std::stoi(value);}
@@ -125,8 +126,12 @@ bool Configuration::parse(const int argc, char** argv) {
 	std::cout << "Withdrawal Processing Interval: " << _options.withdrawalProcessingInterval << " s" << std::endl;
 	std::cout << "Riecoin Wallet Server: " << _options.walletHost << ":" << _options.walletPort << std::endl;
 	std::cout << "Riecoin Wallet Name: " << _options.walletName << std::endl;
-	std::cout << "Riecoin Wallet Username: " << _options.walletUsername << std::endl;
-	std::cout << "Riecoin Wallet Password: ..." << std::endl;
+	if (_options.walletCookie != "")
+		std::cout << "Riecoin Wallet Cookie: " << _options.walletCookie << std::endl;
+	else {
+		std::cout << "Riecoin Wallet Username: " << _options.walletUsername << std::endl;
+		std::cout << "Riecoin Wallet Password: ..." << std::endl;
+	}
 	std::cout << "Database: " << _options.databaseName << " at " << _options.databaseHost << ":" << _options.databasePort << std::endl;
 	std::cout << "Database Username: " << _options.databaseUsername << std::endl;
 	std::cout << "Database Password: ..." << std::endl;

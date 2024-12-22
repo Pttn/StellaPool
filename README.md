@@ -136,7 +136,8 @@ It is case sensitive. A line starting with `#` will be ignored, as well as inval
 * `WalletPort`: the port of the Riecoin server (same as rpcport in riecoin.conf). Default: 28332 (default RPC port for Riecoin Core);
 * `WalletName`: the name of the wallet, set this if you created multiple wallets in Riecoin Core. Default: empty;
 * `WalletUsername`: the username used to connect to the Riecoin server (same as rpcuser in riecoin.conf). Default: empty;
-* `WalletPassword`: the password used to connect to the Riecoin server (same as rpcpassword in riecoin.conf). Default: empty.
+* `WalletPassword`: the password used to connect to the Riecoin server (same as rpcpassword in riecoin.conf). Default: empty;
+* `WalleCookie`: the cookie file containing the credentials, overriding `WalletUsername` and `WalletPassword`. Default: empty/none.
 
 ### Database Settings
 
