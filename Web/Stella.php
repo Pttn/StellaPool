@@ -741,8 +741,6 @@ class Stella {
 		$cps = $info['shareRate']/$P;
 		$info['candidatesPerSecond'] = $cps;
 		$info['miningPower'] = 150.*$cps/($r*$r*$r*$r*$r*$r*$r)*pow($D/600., 9.3);
-		$info['hashrate'] = $info['miningPower'];
-		$info['hashrateNotice'] = 'In Riecoin, we are not looking for hashes, so the concept of "hashrate" does not make sense. We use instead a concept of "Mining Power", which is unfortunately not well understood and misused by many. For compatibility, we have an additional "hashrate" field, which is equal to the "miningPower" field, but sites monitoring pools should use the miningPower field.';
 		return $info;
 	}
 	
