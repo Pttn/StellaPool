@@ -9,10 +9,11 @@
 #include <gmpxx.h>
 #include <iomanip>
 #include <iostream>
-#include <openssl/sha.h>
 #include <random>
 #include <string>
 #include <vector>
+
+#include "external/picosha2.h"
 
 #define leading0s(x) std::setw(x) << std::setfill('0')
 #define FIXED(x) std::fixed << std::setprecision(x)
@@ -62,10 +63,7 @@ template <class C> std::string formatContainer(const C& container) {
 
 inline std::array<uint8_t, 32> sha256(const uint8_t *data, uint32_t len) {
 	std::array<uint8_t, 32> hash;
-	SHA256_CTX sha256;
-	SHA256_Init(&sha256);
-	SHA256_Update(&sha256, data, len);
-	SHA256_Final(hash.data(), &sha256);
+	picosha2::hash256(data, data + len, hash.begin(), hash.end());
 	return hash;
 }
 inline std::array<uint8_t, 32> sha256d(const uint8_t *data, uint32_t len) {

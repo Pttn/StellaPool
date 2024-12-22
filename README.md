@@ -79,14 +79,13 @@ You can get the source code with Git and compile this C++ program with g++ and m
 
 * [Curl](https://curl.haxx.se/)
 * [GMP](https://gmplib.org/)
-* [LibSSL](https://www.openssl.org/)
 * [MySQL C++ Connector](https://dev.mysql.com/doc/connector-cpp/8.0/en/)
 * [NLohmann Json](https://json.nlohmann.me/)
 
 On Debian 11, you can easily install these by doing as root:
 
 ```bash
-apt install g++ make git libcurl4-openssl-dev libgmp-dev libssl-dev libmysqlcppconn-dev nlohmann-json3-dev
+apt install g++ make git libcurl4-openssl-dev libgmp-dev libmysqlcppconn-dev nlohmann-json3-dev
 ```
 
 Then, download the source files, go/`cd` to the directory, and run `make`:

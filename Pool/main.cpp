@@ -154,6 +154,7 @@ int main(int argc, char** argv) {
 	std::cout << "G++ " << __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC_PATCHLEVEL__ << " - https://gcc.gnu.org/" << std::endl;
 	std::cout << "Curl " << LIBCURL_VERSION << " - https://curl.haxx.se/" << std::endl;
 	std::cout << "GMP " << __GNU_MP_VERSION << "." << __GNU_MP_VERSION_MINOR << "." << __GNU_MP_VERSION_PATCHLEVEL << " - https://gmplib.org/" << std::endl;
+	std::cout << "PicoSHA2 27fcf69 - https://github.com/okdshin/PicoSHA2"s << std::endl;
 	std::cout << "MySQL Connector - https://dev.mysql.com/doc/connector-cpp/8.0/en/" << std::endl;
 	std::cout << "NLohmann Json " << NLOHMANN_JSON_VERSION_MAJOR << "." << NLOHMANN_JSON_VERSION_MINOR << "." << NLOHMANN_JSON_VERSION_PATCH << " - https://json.nlohmann.me/" << std::endl;
 	std::cout << "-----------------------------------------------------------" << std::endl;

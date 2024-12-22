@@ -199,7 +199,7 @@ static uint32_t checkConstellation(mpz_class n, const std::vector<uint32_t> offs
 	}
 	return sharePrimeCount;
 }
-uint64_t Pool::_checkPoW(const StratumJob& job, const std::vector<uint8_t>& nOffsetV8) { // See the Riecoin Core's CheckProofOfWork function, or read https://riecoin.dev/en/Protocol/Proof_of_Work
+uint64_t Pool::_checkPoW(const StratumJob& job, const std::vector<uint8_t>& nOffsetV8) { // See the Riecoin Core's CheckProofOfWork function, or read https://riecoin.xyz/Guides/PoWImplementation/
 	if (job.powVersion != 1) {
 		ERRORMSG("Unknown PoW Version " << job.powVersion << ", please upgrade StellaPool!");
 		return 0U;
