@@ -80,7 +80,7 @@ class Stella {
 				if (count($keyValue) == 2)
 					$this->options[trim($keyValue[0])] = trim($keyValue[1]);
 			}
-			$this->database = new PDO('mysql:host=' . $this->options['DatabaseHost'] . ':' . $this->options['DatabasePort'] . ';dbname=' . $this->options['DatabaseName'] . ';', $this->options['DatabaseUsername'], $this->options['DatabasePassword'], [
+			$this->database = new PDO('mysql:host=' . ($this->options['DatabaseHost'] ?? '127.0.0.1') . ':' . ($this->options['DatabasePort'] ?? 3306) . ';dbname=' . $this->options['DatabaseName'] . ';', $this->options['DatabaseUsername'], $this->options['DatabasePassword'], [
 				PDO::ATTR_EMULATE_PREPARES   => false,
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 				PDO::MYSQL_ATTR_FOUND_ROWS   => true,
@@ -99,8 +99,8 @@ class Stella {
 			$this->riecoinRPC = new RiecoinRPC(array(
 				'rpcuser' => $this->options['WalletUsername'],
 				'rpcpassword' => $this->options['WalletPassword'],
-				'rpcip' => $this->options['WalletHost'],
-				'rpcport' => $this->options['WalletPort'],
+				'rpcip' => $this->options['WalletHost'] ?? "127.0.0.1",
+				'rpcport' => $this->options['WalletPort'] ?? 28332,
 				'walletname' => $this->options['WalletName']));
 			$this->currentIp = $_SERVER['REMOTE_ADDR'];
 			$this->currentUserId = null;
