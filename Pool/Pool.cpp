@@ -935,7 +935,7 @@ void Pool::_processPayments() {
 			LOGMSG("Creating transaction with " << outputs.size() << " output(s) (excluding change)...");
 			std::string txId;
 			try {
-				auto sendmany(_sendRequestToWallet(curlPaymentProcessor, "sendmany", {"", outputs, "", "StellaPool Withdrawal"}));
+				auto sendmany(_sendRequestToWallet(curlPaymentProcessor, "sendmany", {outputs, "StellaPool Withdrawal"}));
 				txId = sendmany["result"];
 				database.execute("UPDATE Withdrawals SET state = 1, txid = '"s + txId + "' WHERE state = 3"s);
 				LOGMSG("Successfully sent transaction " << txId);
