@@ -1294,15 +1294,17 @@ void Pool::run() {
 				}
 			}
 		}
-		for (auto it(_miners.begin()) ; it != _miners.end() ; it++) {
+		for (auto it(_miners.cbegin()); it != _miners.cend();) {
 			const std::string disconnectMessage("{\"id\": null, \"method\": \"client.show_message\", \"params\": [\"Miner disconnected due to inactivity\"]}\n"s);
 			if (timeSince(it->second->latestShareTp) > maxInactivityTime) {
 				LOGMSG("Disconnecting inactive " << it->second->str());
 				_punish(it->second->ip, 1.5*maxInactivityTime);
 				write(it->second->fileDescriptor, disconnectMessage.c_str(), disconnectMessage.size());
 				close(it->second->fileDescriptor);
-				_miners.erase(it);
+				it = _miners.erase(it);
 			}
+			else
+				it++;
 		}
 	}
 	_databaseUpdater.join();
