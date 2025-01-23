@@ -536,7 +536,7 @@ std::pair<std::string, bool> Pool::_processMessage(const std::pair<std::shared_p
 			}
 		}
 		if (!jobFound) {
-			LOGMSG("Received invalid submission (job not found) from " << miner->str());
+			// LOGMSG("Received invalid submission (job not found) from " << miner->str());
 			_updatePoints(userId, -2.);
 			_punish(miner->ip, -2.);
 			return {stratumErrorStr(messageId, 21, "Job not found"s), false};
